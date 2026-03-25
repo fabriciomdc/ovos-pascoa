@@ -105,14 +105,6 @@ export function Header({
           </DialogContent>
         </Dialog>
 
-        <Button
-          variant="ghost"
-          onClick={onSeedOrders}
-          className="rounded-full px-3 text-sm text-[#a8dadc] hover:bg-[#a8dadc]/10 dark:text-green-400"
-        >
-          Girar
-        </Button>
-
         <ToogleTheme />
       </div>
     </header>
