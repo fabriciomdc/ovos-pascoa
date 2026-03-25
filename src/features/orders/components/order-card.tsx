@@ -17,9 +17,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import type { Order, OrderStatus } from "@/types/order"
+import type { Order, OrderStatus } from "@/features/orders/types"
 import { TicketCard } from "./ticket-card"
-import { generateTicketImage } from "@/function/generate-ticket"
+import { generateTicketImage } from "@/features/orders/utils/generate-ticket"
 
 interface OrderCardProps {
   order: Order

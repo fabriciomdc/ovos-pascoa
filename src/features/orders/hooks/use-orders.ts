@@ -1,4 +1,4 @@
-import type { Order } from "@/types/order"
+import type { Order } from "@/features/orders/types"
 import { useState, useEffect } from "react"
 
 const mockOrders: Order[] = [

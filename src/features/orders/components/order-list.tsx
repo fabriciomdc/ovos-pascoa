@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Search, Package, Clock, CheckCheck } from "lucide-react"
 import { OrderCard } from "./order-card"
-import type { Order } from "@/types/order"
+import type { Order } from "@/features/orders/types"
 import OvoPng from "@/assets/ovo.png"
 
 interface OrderListProps {
