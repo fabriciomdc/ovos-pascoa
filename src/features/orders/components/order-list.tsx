@@ -32,7 +32,7 @@ export function OrderList({
         <Search className="absolute top-1/2 left-4 h-4 w-4 -translate-y-1/2 text-muted-foreground/50 transition-all group-focus-within:text-primary" />
         <Input
           placeholder="Buscar cliente..."
-          className="h-11 rounded-full border border-black/5 bg-white/60 pl-10 text-sm backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-primary/30 dark:border-white/5 dark:bg-white/5"
+          className="h-11 rounded-sm border border-black/5 bg-white/60 pl-10 text-sm backdrop-blur-md transition-all focus-visible:ring-2 focus-visible:ring-primary/30 dark:border-white/5 dark:bg-white/5"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -53,7 +53,7 @@ export function OrderList({
 
           <TabsTrigger
             value="delivered"
-            className="flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-all data-[state=active]:bg-[#f4e285]/40 data-[state=active]:text-[#5c4b3b] data-[state=active]:shadow-[0_0_15px_rgba(244,226,133,0.4)] dark:data-[state=active]:bg-[#d4af37]/20 dark:data-[state=active]:text-[#e7c27d] dark:data-[state=active]:shadow-[0_0_20px_rgba(212,175,55,0.3)]"
+            className="flex items-center justify-center data-[state=active]:bg-[#a8dadc]/40 data-[state=active]:text-[#1d3557] data-[state=active]:shadow-[0_0_15px_rgba(168,218,220,0.4)] dark:data-[state=active]:bg-[#d4af37]/20 dark:data-[state=active]:text-[#e7c27d] dark:data-[state=active]:shadow-[0_0_20px_rgba(212,175,55,0.3)]"
           >
             <CheckCheck className="h-4 w-4" />
             <span className="hidden sm:inline">
@@ -105,11 +105,11 @@ function EmptyState({
   type: "pending" | "delivered"
 }) {
   return (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-[2.5rem] border border-black/5 bg-white/40 px-6 py-12 text-center backdrop-blur-xl dark:border-white/5 dark:bg-white/5">
+    <div className="relative flex flex-col items-center justify-center overflow-hidden rounded-sm border border-black/5 bg-white/40 px-6 py-12 text-center backdrop-blur-xl dark:border-white/5 dark:bg-white/5">
       <div className="pointer-events-none absolute inset-0 opacity-[0.05]" />
 
       <div className="relative mb-6">
-        <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
+        <div className="absolute inset-0 rounded-sm bg-primary/20 blur-2xl" />
 
         {type === "pending" ? (
           <img

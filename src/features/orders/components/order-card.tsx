@@ -58,11 +58,10 @@ export function OrderCard({ order, onUpdateStatus, onDelete }: OrderCardProps) {
   return (
     <>
       <Card
-        className={`group relative overflow-hidden rounded-[1.8rem] border border-black/5 bg-white/60 backdrop-blur-xl transition-all duration-300 dark:border-white/5 dark:bg-white/5 ${
-          isDelivered
-            ? "opacity-60"
-            : "hover:scale-[1.01] hover:shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
-        }`}
+        className={`group relative overflow-hidden rounded-xl md:rounded-[1.8rem] border border-black/5 bg-white/60 backdrop-blur-xl transition-all duration-300 dark:border-white/5 dark:bg-white/5 ${isDelivered
+          ? "opacity-60"
+          : "hover:scale-[1.01] hover:shadow-[0_10px_30px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
+          }`}
       >
         <div className="pointer-events-none absolute -z-10 opacity-0">
           <TicketCard ref={ticketRef} order={order} />
@@ -90,11 +89,10 @@ export function OrderCard({ order, onUpdateStatus, onDelete }: OrderCardProps) {
                 </Button>
 
                 <Badge
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${
-                    isDelivered
-                      ? "bg-green-500/10 text-green-600 dark:text-green-400"
-                      : "bg-[#a8dadc]/30 text-[#1d3557] dark:bg-[#d4af37]/20 dark:text-[#e7c27d]"
-                  }`}
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${isDelivered
+                    ? "bg-green-500/10 text-green-600 dark:text-green-400"
+                    : "bg-[#a8dadc]/30 text-[#1d3557] dark:bg-[#d4af37]/20 dark:text-[#e7c27d]"
+                    }`}
                 >
                   {isDelivered ? "Entregue" : "Pendente"}
                 </Badge>
@@ -146,17 +144,34 @@ export function OrderCard({ order, onUpdateStatus, onDelete }: OrderCardProps) {
             </div>
           </div>
 
-          <div className="mt-3 hidden rounded-xl bg-black/5 p-2 text-xs text-foreground/70 sm:block dark:bg-white/5">
-            <span className="mr-2 text-[10px] font-bold uppercase opacity-50">
+          <div className="mt-3 hidden rounded-sm bg-black/5 p-3 text-xs text-foreground/70 sm:block dark:bg-white/5">
+            <span className="mb-2 block text-[10px] font-bold uppercase opacity-50">
               Pedido:
             </span>
-            {order.description}
+            {order.items && order.items.length > 0 && (
+              <div className="mb-2 space-y-1">
+                {order.items.map((item) => (
+                  <div key={item.id} className="flex justify-between font-medium">
+                    <span>{item.quantity}x {item.productName} ({item.flavor})</span>
+                    <span>R$ {(item.price * item.quantity).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {order.description && (
+              <div className="italic text-muted-foreground">Obs: {order.description}</div>
+            )}
+            {order.totalPrice !== undefined && order.totalPrice > 0 && (
+              <div className="mt-2 flex justify-end border-t border-black/10 pt-2 font-black text-[#5c4b3b] dark:border-white/10 dark:text-[#e7c27d]">
+                Total: R$ {order.totalPrice.toFixed(2)}
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
 
       <Dialog open={openPreview} onOpenChange={setOpenPreview}>
-        <DialogContent className="max-w-[420px] rounded-[2rem] border-none bg-[#f9f6f0] p-4 dark:bg-[#1a120b]">
+        <DialogContent className="max-w-[420px] rounded-xl md:rounded-[2rem] border-none bg-[#f9f6f0] p-4 dark:bg-[#1a120b]">
           <DialogHeader>
             <DialogTitle className="text-center text-lg font-black tracking-wider text-[#5c4b3b] uppercase dark:text-[#e7c27d]">
               Preview do Ticket
@@ -168,12 +183,12 @@ export function OrderCard({ order, onUpdateStatus, onDelete }: OrderCardProps) {
               <img
                 src={preview}
                 alt="preview"
-                className="w-full rounded-xl shadow-md"
+                className="w-full rounded-md md:rounded-xl shadow-md"
               />
 
               <Button
                 onClick={handleDownload}
-                className="w-full rounded-full bg-[#a8dadc] font-bold text-[#1d3557] hover:bg-[#a8dadc]/90 dark:bg-[#d4af37] dark:text-[#1a120b]"
+                className="w-full rounded-lg md:rounded-full bg-[#a8dadc] font-bold text-[#1d3557] hover:bg-[#a8dadc]/90 dark:bg-[#d4af37] dark:text-[#1a120b]"
               >
                 <Download className="mr-2 h-4 w-4" />
                 Baixar Imagem

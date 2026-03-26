@@ -62,7 +62,7 @@
 
   --border: oklch(0.9 0.02 60);
   --input: oklch(0.9 0.02 60);
-  --radius: 2rem;
+  --radius: 1.5rem;
 }
 
 .dark {
@@ -88,9 +88,11 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }

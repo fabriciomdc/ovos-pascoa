@@ -13,7 +13,7 @@ export function ToogleTheme() {
     <Button
       variant="ghost"
       size="icon"
-      className="h-12 w-12 rounded-full border-2 border-primary/10 bg-card shadow-sm transition-all active:scale-95"
+      className="h-12 w-12 rounded-md md:rounded-full border-2 border-primary/10 bg-card shadow-sm transition-all active:scale-95"
       onClick={toggleTheme}
     >
       {theme === "dark" ? (
