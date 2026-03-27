@@ -1,5 +1,5 @@
 import { forwardRef } from "react"
-import type { Order } from "@/features/orders/types"
+import type { Order } from "@/types/order"
 
 export const TicketCard = forwardRef<HTMLDivElement, { order: Order }>(
   ({ order }, ref) => {

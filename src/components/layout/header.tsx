@@ -16,10 +16,10 @@ import {
 import { format } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
-import { OrderForm } from "@/features/orders/components/order-form"
+import { OrderForm } from "@/components/orders/order-form"
 import { ToogleTheme } from "@/components/toogle-theme"
 import { useAuth } from "@/contexts/auth-context"
-import type { Order } from "@/features/orders/types"
+import type { Order } from "@/types/order"
 
 interface HeaderProps {
   date: Date | undefined
@@ -27,6 +27,7 @@ interface HeaderProps {
   isModalOpen: boolean
   setIsModalOpen: (open: boolean) => void
   onAddOrder: (order: Order) => void
+  editingOrder?: Order | null
 }
 
 export function Header({
@@ -35,6 +36,7 @@ export function Header({
   isModalOpen,
   setIsModalOpen,
   onAddOrder,
+  editingOrder,
 }: HeaderProps) {
   const { logout } = useAuth()
 
@@ -93,11 +95,12 @@ export function Header({
             <DialogContent className="w-[95%] !max-w-2xl max-h-[90vh] overflow-y-auto rounded-sm border-none bg-[#f5efe6] p-4 md:p-6 shadow-2xl dark:bg-[#251a14]">
             <DialogHeader>
               <DialogTitle className="mb-2 text-xl font-black tracking-widest text-[#5c4b3b] uppercase dark:text-[#e7c27d]">
-                Novo Pedido
+                {editingOrder ? "Editar Pedido" : "Novo Pedido"}
               </DialogTitle>
             </DialogHeader>
 
             <OrderForm
+              initialData={editingOrder}
               onAddOrder={(order) => {
                 onAddOrder(order)
                 setIsModalOpen(false)

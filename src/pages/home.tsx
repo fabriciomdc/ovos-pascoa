@@ -1,18 +1,32 @@
 import { useState } from "react"
 import { format } from "date-fns"
 import { Header } from "@/components/layout/header"
-import { OrderList } from "@/features/orders/components/order-list"
-import { useOrders } from "@/features/orders/hooks/use-orders"
+import { OrderList } from "@/components/orders/order-list"
+import { useOrders } from "@/hooks/use-orders"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { InventoryList } from "@/features/inventory/components/inventory-list"
-import { useInventory } from "@/features/inventory/hooks/use-inventory"
+import { InventoryList } from "@/components/inventory/inventory-list"
+import { useInventory } from "@/hooks/use-inventory"
+import type { Order } from "@/types/order"
 
 export function Home() {
-  const { orders, addOrder, updateStatus, deleteOrder } =
+  const { orders, addOrder, updateStatus, deleteOrder, updateOrder } =
     useOrders()
-  const { inventory, updateQuantity } = useInventory()
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const { inventory, updateQuantity, setQuantity } = useInventory()
+  const [date, setDate] = useState<Date | undefined>(undefined)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingOrder, setEditingOrder] = useState<Order | null>(null)
+
+  const handleEdit = (order: Order) => {
+    setEditingOrder(order)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = (open: boolean) => {
+    setIsModalOpen(open)
+    if (!open) {
+      setEditingOrder(null)
+    }
+  }
 
   const filteredOrders = date
     ? orders.filter((o) => o.deliveryDate === format(date, "yyyy-MM-dd"))
@@ -24,8 +38,9 @@ export function Home() {
         date={date}
         setDate={setDate}
         isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        onAddOrder={addOrder}
+        setIsModalOpen={handleCloseModal}
+        onAddOrder={editingOrder ? updateOrder : addOrder}
+        editingOrder={editingOrder}
       />
 
       <Tabs defaultValue="pedidos" className="w-full space-y-6">
@@ -47,6 +62,7 @@ export function Home() {
               orders={filteredOrders}
               onUpdateStatus={updateStatus}
               onDelete={deleteOrder}
+              onEdit={handleEdit}
             />
           </main>
         </TabsContent>
@@ -62,6 +78,7 @@ export function Home() {
               <InventoryList
                 inventory={inventory}
                 onUpdateQuantity={updateQuantity}
+                onSetQuantity={setQuantity}
               />
             </div>
           </main>

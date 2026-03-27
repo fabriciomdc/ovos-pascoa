@@ -3,19 +3,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Search, Package, Clock, CheckCheck } from "lucide-react"
 import { OrderCard } from "./order-card"
-import type { Order } from "@/features/orders/types"
+import type { Order } from "@/types/order"
 import OvoPng from "@/assets/ovo.png"
 
 interface OrderListProps {
   orders: Order[]
   onUpdateStatus: (id: string, status: Order["status"]) => void
   onDelete: (id: string) => void
+  onEdit: (order: Order) => void
 }
 
 export function OrderList({
   orders,
   onUpdateStatus,
   onDelete,
+  onEdit,
 }: OrderListProps) {
   const [searchTerm, setSearchTerm] = useState("")
 
@@ -71,6 +73,7 @@ export function OrderList({
                 order={order}
                 onUpdateStatus={onUpdateStatus}
                 onDelete={onDelete}
+                onEdit={onEdit}
               />
             ))
           ) : (
@@ -86,6 +89,7 @@ export function OrderList({
                 order={order}
                 onUpdateStatus={onUpdateStatus}
                 onDelete={onDelete}
+                onEdit={onEdit}
               />
             ))
           ) : (

@@ -12,12 +12,13 @@ export interface OrderItem {
 export interface Order {
   id: string
   customerName: string
-  orderDate: string
   deliveryDate: string
   deliveryTime: string
   address: string
   description: string
+  orderDate: string
   status: OrderStatus
-  items?: OrderItem[]
-  totalPrice?: number
+  items: OrderItem[]
+  totalPrice: number
+  userId: string
 }

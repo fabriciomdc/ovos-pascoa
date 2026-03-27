@@ -8,6 +8,7 @@ import {
   Clock,
   ImageIcon,
   Download,
+  Pencil,
 } from "lucide-react"
 import { useRef, useState } from "react"
 import {
@@ -17,17 +18,18 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import type { Order, OrderStatus } from "@/features/orders/types"
+import type { Order, OrderStatus } from "@/types/order"
 import { TicketCard } from "./ticket-card"
-import { generateTicketImage } from "@/features/orders/utils/generate-ticket"
+import { generateTicketImage } from "@/utils/generate-ticket"
 
 interface OrderCardProps {
   order: Order
   onUpdateStatus: (id: string, status: OrderStatus) => void
   onDelete: (id: string) => void
+  onEdit: (order: Order) => void
 }
 
-export function OrderCard({ order, onUpdateStatus, onDelete }: OrderCardProps) {
+export function OrderCard({ order, onUpdateStatus, onDelete, onEdit }: OrderCardProps) {
   const isDelivered = order.status === "Delivered"
 
   const ticketRef = useRef<HTMLDivElement>(null)
@@ -132,14 +134,23 @@ export function OrderCard({ order, onUpdateStatus, onDelete }: OrderCardProps) {
                   </Button>
                 )}
 
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-9 w-9 rounded-full text-muted-foreground transition-all hover:scale-110 hover:bg-red-500/10 hover:text-red-500"
-                  onClick={() => onDelete(order.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-9 w-9 rounded-full text-blue-600 transition-all hover:scale-110 hover:bg-blue-500/10 dark:text-blue-400"
+                    onClick={() => onEdit(order)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-9 w-9 rounded-full text-muted-foreground transition-all hover:scale-110 hover:bg-red-500/10 hover:text-red-500"
+                    onClick={() => onDelete(order.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
               </div>
             </div>
           </div>
