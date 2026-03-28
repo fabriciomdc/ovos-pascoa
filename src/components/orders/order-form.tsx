@@ -21,7 +21,7 @@ const formatBRL = (value: number) => {
 }
 
 export function OrderForm({ onAddOrder, initialData }: OrderFormProps) {
-  const { inventory, deductQuantities } = useInventory()
+  const { inventory, deductQuantities, adjustQuantities } = useInventory()
 
   const [formData, setFormData] = useState({
     customerName: "",
@@ -63,7 +63,7 @@ export function OrderForm({ onAddOrder, initialData }: OrderFormProps) {
 
   const today = new Date().toLocaleDateString("pt-BR")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const orderItems: OrderItem[] = items.map((item) => {
@@ -77,32 +77,44 @@ export function OrderForm({ onAddOrder, initialData }: OrderFormProps) {
       }
     })
 
-    onAddOrder({
-      ...formData,
-      id: initialData?.id || crypto.randomUUID(),
-      orderDate: initialData?.orderDate || today,
-      status: initialData?.status || "Pending",
-      items: orderItems,
-      totalPrice: orderItems.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
-      ),
-      userId: initialData?.userId || "", // Será preenchido pelo hook se necessário
-    })
 
-    // Só deduz se for um novo pedido para não bagunçar o estoque na edição simples
-    // Futuramente poderia ter uma lógica mais complexa de comparação
-    if (!initialData && orderItems.length > 0) deductQuantities(orderItems)
+    // Gerenciamento de estoque atômico
+    try {
+      if (initialData) {
+        // Se for edição, usamos adjustQuantities para fazer tudo em um único batch
+        await adjustQuantities(initialData.items || [], orderItems);
+      } else if (orderItems.length > 0) {
+        // Se for novo pedido, apenas deduz
+        await deductQuantities(orderItems);
+      }
 
-    if (!initialData) {
-      setFormData({
-        customerName: "",
-        deliveryDate: "",
-        deliveryTime: "",
-        address: "",
-        description: "",
-      })
-      setItems([])
+      // Adiciona o pedido apenas após garantir o estoque (ou em paralelo se preferir, mas await aqui é mais seguro)
+      await onAddOrder({
+        ...formData,
+        id: initialData?.id || crypto.randomUUID(),
+        orderDate: initialData?.orderDate || today,
+        status: initialData?.status || "Pending",
+        items: orderItems,
+        totalPrice: orderItems.reduce(
+          (acc, item) => acc + item.price * item.quantity,
+          0
+        ),
+        userId: initialData?.userId || "",
+      });
+
+      if (!initialData) {
+        setFormData({
+          customerName: "",
+          deliveryDate: "",
+          deliveryTime: "",
+          address: "",
+          description: "",
+        })
+        setItems([])
+      }
+    } catch (error) {
+      console.error("Erro ao processar pedido:", error);
+      alert("Ocorreu um erro ao salvar o pedido. Verifique o estoque e tente novamente.");
     }
   }
 
@@ -179,7 +191,6 @@ export function OrderForm({ onAddOrder, initialData }: OrderFormProps) {
               onChange={(e) =>
                 setFormData({ ...formData, deliveryTime: e.target.value })
               }
-              required
               className="h-11 border-black/10 dark:border-white/10"
             />
           </div>

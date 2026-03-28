@@ -11,7 +11,7 @@ import type { Order } from "@/types/order"
 export function Home() {
   const { orders, addOrder, updateStatus, deleteOrder, updateOrder } =
     useOrders()
-  const { inventory, updateQuantity, setQuantity } = useInventory()
+  const { inventory, setQuantity } = useInventory()
   const [date, setDate] = useState<Date | undefined>(undefined)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingOrder, setEditingOrder] = useState<Order | null>(null)
@@ -77,7 +77,6 @@ export function Home() {
             <div className="relative z-10">
               <InventoryList
                 inventory={inventory}
-                onUpdateQuantity={updateQuantity}
                 onSetQuantity={setQuantity}
               />
             </div>

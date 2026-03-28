@@ -45,20 +45,53 @@ export const inventoryService = {
 
   async deductQuantities(
     userId: string,
-    itemsToDeduct: { inventoryItemId: string; quantity: number }[],
-    currentInventory: InventoryItem[]
+    itemsToDeduct: { inventoryItemId: string; quantity: number }[]
   ) {
     const batch = writeBatch(db)
 
     for (const item of itemsToDeduct) {
       if (!item.inventoryItemId) continue
 
-      const currentItem = currentInventory.find((i) => i.id === item.inventoryItemId)
-      if (currentItem) {
-        const itemRef = this.getDocRef(userId, item.inventoryItemId)
-        const newQty = Math.max(0, currentItem.quantity - item.quantity)
-        batch.update(itemRef, { quantity: newQty })
-      }
+      const itemRef = this.getDocRef(userId, item.inventoryItemId)
+      batch.update(itemRef, { quantity: increment(-item.quantity) })
+    }
+
+    await batch.commit()
+  },
+
+  async restoreQuantities(
+    userId: string,
+    itemsToRestore: { inventoryItemId: string; quantity: number }[]
+  ) {
+    const batch = writeBatch(db)
+
+    for (const item of itemsToRestore) {
+      if (!item.inventoryItemId) continue
+
+      const itemRef = this.getDocRef(userId, item.inventoryItemId)
+      batch.update(itemRef, { quantity: increment(item.quantity) })
+    }
+
+    await batch.commit()
+  },
+
+  async adjustQuantities(
+    userId: string,
+    toRestore: { inventoryItemId: string; quantity: number }[],
+    toDeduct: { inventoryItemId: string; quantity: number }[]
+  ) {
+    const batch = writeBatch(db)
+
+    for (const item of toRestore) {
+      if (!item.inventoryItemId) continue
+      const itemRef = this.getDocRef(userId, item.inventoryItemId)
+      batch.update(itemRef, { quantity: increment(item.quantity) })
+    }
+
+    for (const item of toDeduct) {
+      if (!item.inventoryItemId) continue
+      const itemRef = this.getDocRef(userId, item.inventoryItemId)
+      batch.update(itemRef, { quantity: increment(-item.quantity) })
     }
 
     await batch.commit()

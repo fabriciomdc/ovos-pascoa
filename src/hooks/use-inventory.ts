@@ -13,6 +13,7 @@ const INITIAL_INVENTORY: InventoryItem[] = [
   { id: "kit-confeiteiro-masc", name: "Kit Confeiteiro Masculino", category: "Kits", quantity: 0 },
   { id: "kit-confeiteiro-fem", name: "Kit Confeiteiro Feminino", category: "Kits", quantity: 0 },
   { id: "mini-ovos-50g", name: "Mini ovos 50g", category: "Outros", quantity: 0 },
+  { id: "pirulitos-chocolate", name: "Pirulitos de Chocolate", category: "Doces", quantity: 0 },
 ]
 
 export function useInventory() {
@@ -75,11 +76,32 @@ export function useInventory() {
   const deductQuantities = async (itemsToDeduct: { inventoryItemId: string; quantity: number }[]) => {
     if (!user) return
     try {
-      await inventoryService.deductQuantities(user.uid, itemsToDeduct, inventory)
+      await inventoryService.deductQuantities(user.uid, itemsToDeduct)
     } catch (error) {
       console.error("Erro ao deduzir quantidades:", error)
     }
   }
 
-  return { inventory, loading, updateQuantity, setQuantity, deductQuantities }
+  const restoreQuantities = async (itemsToRestore: { inventoryItemId: string; quantity: number }[]) => {
+    if (!user) return
+    try {
+      await inventoryService.restoreQuantities(user.uid, itemsToRestore)
+    } catch (error) {
+      console.error("Erro ao restaurar quantidades:", error)
+    }
+  }
+
+  const adjustQuantities = async (
+    toRestore: { inventoryItemId: string; quantity: number }[],
+    toDeduct: { inventoryItemId: string; quantity: number }[]
+  ) => {
+    if (!user) return
+    try {
+      await inventoryService.adjustQuantities(user.uid, toRestore, toDeduct)
+    } catch (error) {
+      console.error("Erro ao ajustar quantidades:", error)
+    }
+  }
+
+  return { inventory, loading, updateQuantity, setQuantity, deductQuantities, restoreQuantities, adjustQuantities }
 }

@@ -3,6 +3,7 @@ import type { Order } from "@/types/order"
 import { onSnapshot, query, orderBy } from "firebase/firestore"
 import { useAuth } from "@/contexts/auth-context"
 import { orderService } from "@/services/order-service"
+import { inventoryService } from "@/services/inventory-service"
 
 export function useOrders() {
   const { user } = useAuth()
@@ -52,6 +53,10 @@ export function useOrders() {
   const deleteOrder = async (id: string) => {
     if (!user) return
     try {
+      const orderToDelete = orders.find(o => o.id === id)
+      if (orderToDelete && orderToDelete.items) {
+        await inventoryService.restoreQuantities(user.uid, orderToDelete.items)
+      }
       await orderService.deleteOrder(user.uid, id)
     } catch (error) {
       console.error("Erro ao deletar pedido:", error)
